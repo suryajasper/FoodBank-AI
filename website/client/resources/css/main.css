@@ -19,4 +19,73 @@
   border: 3px solid black;
   border-radius: 4px;
   z-index: 1000;
+  padding: 6px;
+}
+.popup * {
+  margin: 11px;
+}
+.center-outside {
+  text-align: center;
+}
+.center-div {
+  display: inline-block;
+  padding: 1em;
+  border-radius:4px;
+}
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+  padding: 6px;
+  border-radius: 3px;
+  font-size: 1.25em;
+  font-weight: 700;
+  color: white;
+  background-color: rgb(70, 170, 77);
+  display: inline-block;
+  cursor: pointer;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: rgb(43, 190, 53);
+}
+
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+input[type=text] {
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: rgb(184, 184, 184);
+  color: black;
+  -webkit-transition: 0.5s;
+}
+input[type=text]:hover {
+  background-color: rgb(101, 101, 101);
+  color: white;
+  -webkit-transition: 0.5s;
+}
+input[type=number] {
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: rgb(184, 184, 184);
+  color: black;
+  -webkit-transition: 0.5s;
+}
+input[type=number]:hover {
+  background-color: rgb(101, 101, 101);
+  color: white;
+  -webkit-transition: 0.5s;
 }
