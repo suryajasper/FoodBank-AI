@@ -1,0 +1,22 @@
+.center {
+  margin: auto;
+  text-align: center;
+  display: inline-block;
+}
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.login-signup-container {
+  text-align: center;
+}
+.login-signup-container a {
+  margin-right: 6px;
+}
+.popup {
+  border: 3px solid black;
+  border-radius: 4px;
+  z-index: 1000;
+}

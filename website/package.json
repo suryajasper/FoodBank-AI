@@ -1,0 +1,29 @@
+{
+  "name": "food-bank-ai",
+  "version": "1.0.0",
+  "description": "a more efficient way to deal with the lessening food supply in food banks due to COVID-19 using AI (a project for GeomsHacks)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suryajasper/Food-Bank-AI.git"
+  },
+  "author": "Surya Jasper <suryajasper2004@gmail.com> (http://suryajasper.com)",
+  "contributors": [
+    "Shlok Shah <shlokshah@sfhs.com>"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/suryajasper/Food-Bank-AI/issues"
+  },
+  "homepage": "https://github.com/suryajasper/Food-Bank-AI#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^8.12.1",
+    "http": "0.0.1-security",
+    "socket.io": "^2.3.0",
+    "unirest": "^0.6.0"
+  }
+}
