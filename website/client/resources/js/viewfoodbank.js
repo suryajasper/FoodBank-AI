@@ -158,6 +158,14 @@ function addFoodToBank(food) {
   addFood(food);
 }
 
+function createHomelessShelters(res) {
+  for (var shelter of res) {
+    var li = document.createElement('li');
+    li.innerHTML = shelter.name + ' <span style = "color: rgb(63, 149, 79)">(' + shelter.formatted_address + ')</span>';
+    document.getElementById('shelterDiv').appendChild(li);
+  }
+}
+
 firebase.auth().onAuthStateChanged(user => {
   userID = user.uid;
   socket.emit('getFood', userID, foodBank);
@@ -166,6 +174,10 @@ firebase.auth().onAuthStateChanged(user => {
     console.log(bank);
     document.getElementById('address').innerHTML = 'Address: ' + bank.address;
     socket.emit('getCoordinates', bank.address);
-    socket.on('coordinatesRes', initMap);
+    socket.on('coordinatesRes', function(loc) {
+      initMap(loc);
+      socket.emit('findHomelessShelter', loc, 10000);
+      socket.on('foundHomelessShelters', createHomelessShelters);
+    });
   })
 })

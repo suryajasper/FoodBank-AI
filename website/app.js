@@ -14,6 +14,33 @@ function replaceAll(orig, toReplace, replaceWith) {
   return replaced;
 }
 
+function searchIngredients(ingredient) {
+  var unirest = require("unirest");
+
+  var req = unirest("GET", "https://api.spoonacular.com/food/ingredients/autocomplete?query=" + ingredient + "&number=7&metaInformation=true");
+
+  req.query({
+    "defaultCss": true
+  });
+
+  return req;
+}
+
+function getHomelessShelters(location, radius) {
+  var unirest = require("unirest");
+
+  var req = unirest("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json");
+
+  req.query({
+    "key": "AIzaSyB874rZyp7PmkKpMdfpbQfKXSSLEJwglvM",
+    "query": "homeless shelters",
+    "location": location.lat.toString() + ',' + location.lng.toString(),
+    "radius": radius.toString()
+  });
+
+  return req;
+}
+
 function getCoordinates(address) {
   address = replaceAll(address, ' ', '+');
   var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+' + address + '&key=AIzaSyB874rZyp7PmkKpMdfpbQfKXSSLEJwglvM';
@@ -89,6 +116,15 @@ io.on('connection', function(socket){
       unit: newUnit
     })
   });
+  socket.on('findHomelessShelter', function(location, radius) {
+    var promise = getHomelessShelters(location, radius);
+    promise.end(function(res) {
+      if (res.error) {console.log(res.error);}
+      else {
+        socket.emit('foundHomelessShelters', res.body.results);
+      }
+    })
+  })
 });
 
 http.listen(port, function(){
