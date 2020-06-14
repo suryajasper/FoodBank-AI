@@ -1,0 +1,58 @@
+<html>
+<head>
+  <title>View Food Bank</title>
+  <meta charset = "utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+  <link rel = "stylesheet" href= "resources/css/main.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://www.google.com/jsapi"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class = "center-outside">
+    <div class = "center-div">
+      <button id = "addFood">Add Food</button>
+    </div>
+  </div>
+  <h1 id = "bankName" style = "text-align: center;"></h1>
+  <h2 id = "address"></h2>
+  <div style = "width: 100%; height: 40vh;" id="map"></div>
+  <h2>Food</h2>
+  <div id = "foodDiv">
+  </div>
+  <div id = "specpopup" style = "display: none;" class = "centered">
+    <div class = "popup" style = "background: linear-gradient(to bottom, white, rgb(187, 187, 187));">
+      <div class = "center-outside">
+        <div style = "margin-top: 0px;" class = "center-div">
+          <input id = "qtyInput" type = "number" style = "display: inline-block; margin-right: 6px;"></input>
+          <select style = "display: inline-block;" id = "specpopupSelect">
+          </select>
+          <br>
+          <button style = "background-color: rgb(170, 123, 123); color: rgb(255, 255, 255);">Delete</button>
+          <button id = "saveQtyChange" style = "background-color: rgb(123, 170, 123); color: rgb(255, 255, 255);">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class = "centered">
+    <div id = "popup" class = "popup" style = "background: linear-gradient(to bottom, white, rgb(187, 187, 187));display: none;">
+      <div class = "center-outside">
+        <div class = "center-div">
+          <form>
+            Name of Food (enter / followed by a comma-separated list of food to enter multiple)<br>
+            <input type = "text" id = "food_name" style = "width: 550px;" placeholder = "apple" required><br>
+            <input id = "search" value = "search" type = "submit"></input>
+          </form>
+        </div>
+      </div>
+      <div id = "choiceDiv">
+      </div>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-database.js"></script>
+  <script src = "resources/js/firebase-functions.js"></script>
+  <script src = "resources/js/viewfoodbank.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB874rZyp7PmkKpMdfpbQfKXSSLEJwglvM&callback=initMap"></script>
+</body>
+</html>

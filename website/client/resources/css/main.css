@@ -61,6 +61,9 @@
 	outline: 1px dotted #000;
 	outline: -webkit-focus-ring-color auto 5px;
 }
+input {
+  font-size: 15px;
+}
 input[type=text] {
   border: none;
   padding: 8px;
@@ -88,4 +91,67 @@ input[type=number]:hover {
   background-color: rgb(101, 101, 101);
   color: white;
   -webkit-transition: 0.5s;
+}
+.bank {
+  border: 3px solid black;
+  border-radius: 3px;
+  padding: 6px;
+  margin: 6px;
+  display: inline-block;
+  background-color: rgb(157, 157, 157);
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.addbutton {
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  background-color: rgb(55, 161, 123);
+  -webkit-transition: 0.4s;
+}
+.addbutton:hover {
+  background-color: rgb(34, 147, 109);
+  -webkit-transition: 0.4s;
+}
+.bankFood {
+  border: 2px solid black;
+  display: table;
+  border-radius: 2px;
+  background: rgb(162, 162, 162);
+  margin: 0px;
+  height: 50px;
+  line-height: 50px;
+  cursor: pointer;
+  width: 100%;
+  -webkit-transition: 0.7s;
+}
+.bankFood:hover {
+  background: rgb(147, 173, 149);
+  -webkit-transition: 0.7s;
+}
+.bankFood * {
+  margin-right: 5px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  display: inline-block;
+}
+.bankFood .vertical {
+  display: table-cell;
+  vertical-align: middle;
+}
+.bankFood img {
+  height: 50px;
+}
+button {
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: rgb(168, 168, 168);
 }
