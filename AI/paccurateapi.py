@@ -11,8 +11,8 @@ class Paccurate:
 		items = []
 		for i in range(len(self.packets)):
 			item = {'refid': i}
-			item['dimensions'] = self.packets[i][2]
-			item['quantity'] = self.packets[i][1]
+			item['dimensions'] = self.packets[i]['dimensions']
+			item['quantity'] = self.packets[i]['quantity']
 			items.append(item)
 		r['itemsets'] = items
 		
@@ -22,6 +22,6 @@ class Paccurate:
 		box['dimensions'] = self.box
 		r['boxtypes'] = box
 
-		d = requests.post('http://api.paccurate.io/', data = r, headers={'Authorization': 'apike ' + self.key})
+		d = requests.post('http://api.paccurate.io/', data = r, headers={'Authorization': 'apike ' + self.key}).json()
 
 		return d['boxes'][0]['box']['items']

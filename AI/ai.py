@@ -1,5 +1,6 @@
 from flask import Flask, escape, request, render_template, make_response, url_for, redirect, jsonify
 import requests
+from paccurateapi import Paccurate
 app = Flask(__name__)
 
 SERVER_NAME = 'suryajasper.com'
@@ -56,16 +57,22 @@ def divide_food(food, banks, shelters):
    for i in range(len(banks)):
       c = calorie_requirements[i] - deficit
       while c > 0:
-                  
 
-def 
 
 @app.route('/dividefood')
 def divide_endpoint():
-   food = requests.get(SERVER_NAME + 'food_availability')
-   banks = requests.get(SERVER_NAME + 'banks')
-   food = requests.get(SERVER_NAME + 'shelters')
+   food = requests.get(SERVER_NAME + 'food_availability').json()
+   banks = requests.get(SERVER_NAME + 'banks').json()
+   food = requests.get(SERVER_NAME + 'shelters').json()
    return (jsonify(divide_food(food, banks, shelters)))
+
+@app.route('/pack',  methods=['POST', 'GET'])
+def pack():
+   if request.method == 'POST':
+      json = request.get_json(force=True)
+      p = Paccurate(json['packets'], json['box'])
+      result = p.pack()
+      return(jsonify(result))
 
 if __name__ == '__main__':
    initialize_vars()
