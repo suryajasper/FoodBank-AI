@@ -22,6 +22,7 @@ function initMap(location) {
 }
 
 function refreshBanks(userID) {
+  $('#foodbankDiv').empty();
   socket.emit('getFoodBanks', userID);
   socket.on('foodBankRes', function(res) {
     for (var key of Object.keys(res)) (function(key) {

@@ -57,6 +57,7 @@ admin.initializeApp({
 
 var database = admin.database();
 var userInfo = database.ref('userInfo');
+var warehouse = database.ref('warehouse');
 var banks = database.ref('banks');
 
 io.on('connection', function(socket){
@@ -116,6 +117,26 @@ io.on('connection', function(socket){
       unit: newUnit
     })
   });
+
+  socket.on('addFoodToWarehouse', function(userID, food) {
+    var update = {};
+    update[food.name] = food;
+    warehouse.child(userID).update(update);
+  })
+  socket.on('getFoodWarehouse', function(userID, bank) {
+    warehouse.child(userID).once('value', function(snapshot) {
+      if (snapshot.val() !== null) {
+        socket.emit('foodRes', snapshot.val());
+      }
+    })
+  })
+  socket.on('changeQtyAndUnitWarehouse', function(userID, foodname, newQty, newUnit) {
+    warehouse.child(userID).child(foodname).update({
+      quantity: newQty,
+      unit: newUnit
+    })
+  });
+
   socket.on('findHomelessShelter', function(location, radius) {
     var promise = getHomelessShelters(location, radius);
     promise.end(function(res) {
