@@ -1,5 +1,6 @@
 var admin = require('firebase-admin');
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 app.use(express.static(__dirname + '/client'));
 app.use((req, res, next) => {
@@ -113,6 +114,37 @@ var database = admin.database();
 var userInfo = database.ref('userInfo');
 var warehouse = database.ref('warehouse');
 var banks = database.ref('banks');
+var homelessPref = database.ref('preferences');
+
+function sendToAI() {
+  var unirest = require('unirest');
+
+  var req = unirest("GET", 'aifoodbank.suryajasper.com/dividefood');
+
+  req.end(function(res) {
+    var foodbanks = res.body;
+    warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+      for (var bankName of Object.keys(foodbanks)) {
+        banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).once('value', function(bankSnapshot) {
+          for (var foodName of Object.keys(foodbanks[bankName])) {
+            warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(foodName).update({
+              quantity: Math.min(snapshot.val()[bankName][foodName].quantity-foodbanks[bankName][foodName], 0);
+            });
+            if (foodName in bankSnapshot.val()) {
+              banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').child(foodName).update({
+                quantity: parseInt(bank.snapshot.val()[foodName].quantity) + foodbanks[bankName][foodName];
+              })
+            } else {
+              var update = {};
+              update[foodName] = snapshot.val()[foodName];
+              banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').update(update);
+            }
+          }
+        });
+      }
+    })
+  });
+}
 
 app.get('/warehouse', async function(req, res) {
   warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
@@ -138,6 +170,31 @@ app.get('/shelters', async function(req, res) {
   	res.end();
   })
 });
+
+app.post('/preferences', async function (req, res) {
+  homelessPref.once('value', function(snapshot) {
+    var ind = (snapshot.val() == null) ? 0 : Object.keys(snapshot.val()).length;
+    homelessPref.child(ind).set({
+      calories: req.body.calories,
+      choices: req.body.foods
+    })
+  })
+  res.status(200);
+  res.end();
+})
+
+app.get('/preferences', async function (req, res) {
+  homelessPref.once('value', function(snapshot) {
+    var ind = (snapshot.val() == null) ? 0 : Object.keys(snapshot.val()).length;
+    homelessPref.child(ind).set({
+      calories: req.body.calories,
+      choices: req.body.foods,
+      shelter: req.body.shelter
+    })
+  })
+  res.status(200);
+  res.end();
+})
 
 app.get('/banks', async function(req, res) {
   banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {

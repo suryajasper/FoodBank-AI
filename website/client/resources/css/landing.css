@@ -3,16 +3,17 @@
 }
 .title {
   padding-bottom: 15px;
-  background: linear-gradient(to bottom left, rgb(168, 244, 133), rgb(72, 110, 6));
+  background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(233, 233, 210));
   margin: 0px;
 }
 .title a {
-  color: white;
+  color: rgb(84, 77, 16);
   font-size: 20px;
 }
 .description h2 {
   font-size: 2.5em;
   margin: 0px;
+  color: rgb(10, 54, 0);
   margin-bottom: 6px;
   text-align: center;
 }
@@ -27,6 +28,7 @@
 }
 .title h1 {
   margin: 0px;
+  color: black;
 }
 body {
   margin: 0px;
