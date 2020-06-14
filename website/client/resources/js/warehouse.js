@@ -78,11 +78,23 @@ document.getElementById('search').onclick = function(e) {
 
 var map;
 
-function initMap(locations) {
+function initMap(locs, infos) {
   map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 4, center: locations[0]});
-  for (var location of locations) {
-    var marker = new google.maps.Marker({position: location, map: map});
+      document.getElementById('map'), {zoom: 4, center: locs[0]});
+  var iw = new google.maps.InfoWindow();
+  for (var i = 0; i < locs.length; i++) {
+    var marker = new google.maps.Marker({position: locs[i], map: map});
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        iw.setContent(infos[i]);
+        iw.open(map, marker);
+      }
+    })(marker, i));
+    google.maps.event.addListener(marker, 'dblclick', (function(marker, i) {
+      return function() {
+        window.location.href = 'viewfoodbank.html?' + infos[i];
+      }
+    })(marker, i));
   }
 }
 function addMarker(locaton) {
@@ -167,12 +179,13 @@ function addFoodToWarehouse(food) {
 
 var lengthOfArray;
 var markers = [];
+var markerinfos;
 
 socket.on('coordinatesRes', function(loc) {
   console.log(loc);
   markers.push(loc);
   if (markers.length == lengthOfArray) {
-    initMap(markers);
+    initMap(markers, markerinfos);
   }
 });
 
@@ -182,6 +195,7 @@ firebase.auth().onAuthStateChanged(user => {
 
   socket.emit('getFoodBanks', userID);
   socket.on('foodBankRes', function(banks) {
+    markerinfos = Object.keys(banks);
     //initMap();
     lengthOfArray = Object.values(banks).length;
     for (var bank of Object.values(banks)) {
