@@ -122,6 +122,7 @@ function addFood(food) {
     document.getElementById('specpopup').style.display = 'block';
     var qtyIn = document.getElementById('qtyInput');
     var specpopupSelect = document.getElementById('specpopupSelect');
+    $('#specpopupSelect').empty();
     qtyIn.value = food.quantity;
     for (var option of food.possibleUnits) {
       var newOption = document.createElement('option');
@@ -136,7 +137,9 @@ function addFood(food) {
       e.preventDefault();
       socket.emit('changeQtyAndUnit', userID, foodBank, food.name, parseInt(qtyIn.value), specpopupSelect.value);
       document.getElementById('specpopup').style.display = 'none';
-      socket.emit('getFood', userID, foodBank);
+      socket.on('changed', function() {
+        socket.emit('getFood', userID, foodBank);
+      })
     }
   }
 
@@ -144,7 +147,6 @@ function addFood(food) {
 }
 
 socket.on('foodRes', function(foods) {
-  console.log(foods);
   $('#foodDiv').empty();
   for (var key of Object.keys(foods)) (function(key) {
     var food = foods[key];
@@ -179,11 +181,11 @@ firebase.auth().onAuthStateChanged(user => {
     });
     console.log(bank);
     document.getElementById('address').innerHTML = 'Address: ' + bank.address;
+    socket.emit('findHomelessShelter', userID, foodBank, 10000);
+    socket.on('foundHomelessShelters', createHomelessShelters);
     socket.emit('getCoordinates', bank.address);
     socket.on('coordinatesRes', function(loc) {
       initMap(loc);
-      socket.emit('findHomelessShelter', loc, 10000);
-      socket.on('foundHomelessShelters', createHomelessShelters);
     });
   })
 })

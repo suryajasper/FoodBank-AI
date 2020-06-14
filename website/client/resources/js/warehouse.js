@@ -123,6 +123,7 @@ function addFood(food) {
   div.appendChild(verticalAlignDiv1);
 
   div.onclick = function() {
+    $('#specpopupSelect').empty();
     document.getElementById('specpopup').style.display = 'block';
     var qtyIn = document.getElementById('qtyInput');
     var specpopupSelect = document.getElementById('specpopupSelect');
@@ -140,7 +141,9 @@ function addFood(food) {
       e.preventDefault();
       socket.emit('changeQtyAndUnitWarehouse', userID, food.name, parseInt(qtyIn.value), specpopupSelect.value);
       document.getElementById('specpopup').style.display = 'none';
-      socket.emit('getFoodWarehouse', userID);
+      socket.on('changed', function() {
+        socket.emit('getFoodWarehouse', userID);
+      })
     }
   }
 
