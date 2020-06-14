@@ -165,3 +165,14 @@ a.warehouseAnchor {
   border-radius: 3px;
   background-color: rgb(168, 168, 168);
 }
+.fill-outer {
+  width: 97vw;
+  background: rgb(173, 173, 173);
+}
+.fill {
+	width:0%;
+	height:10px;
+	background: rgb(242, 86, 86);
+	background-size:0% 100%;
+	background-position:0 100px;
+}

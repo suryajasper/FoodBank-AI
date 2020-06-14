@@ -171,6 +171,12 @@ firebase.auth().onAuthStateChanged(user => {
   socket.emit('getFood', userID, foodBank);
   socket.emit('getFoodBank', userID, foodBank);
   socket.on('foodBankIndRes', function(bank) {
+    if ('food' in bank)
+      socket.emit('convertIngs', Object.values(bank.food));
+    socket.on('totalSpace', function(occupied) {
+      console.log((occupied/parseFloat(bank.maxStorage)*100).toString() + '% occupied');
+      document.getElementById('filler').style.width = (occupied/parseFloat(bank.maxStorage)*100).toString() + "%";
+    });
     console.log(bank);
     document.getElementById('address').innerHTML = 'Address: ' + bank.address;
     socket.emit('getCoordinates', bank.address);

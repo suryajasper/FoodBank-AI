@@ -14,6 +14,7 @@ function replaceAll(orig, toReplace, replaceWith) {
   return replaced;
 }
 
+
 function searchIngredients(ingredient) {
   var unirest = require("unirest");
 
@@ -145,6 +146,41 @@ io.on('connection', function(socket){
         socket.emit('foundHomelessShelters', res.body.results);
       }
     })
+  })
+
+  socket.on('convertIngs', function(ings) {
+    var unirest = require('unirest');
+    var results = ings.map(function(ingredient) {
+      return new Promise(function(resolve, reject) {
+        var req = unirest("GET", 'https://api.spoonacular.com/recipes/convert');
+        var unit = ('unit' in ingredient) ? ingredient.unit: ingredient.possibleUnits[0];
+        console.log(unit);
+
+        req.query({
+          "apiKey": "bc240f5675d94b39b9a096f5a949a9d7",
+          "ingredientName": ingredient.name,
+          "sourceAmount": ingredient.quantity,
+          "sourceUnit": unit,
+          "targetUnit": 'oz'
+        });
+
+        req.end(function(data) {
+          resolve(data);
+        });
+
+        return req;
+      });
+    });
+    Promise.all(results).then(function(result) {
+      var total = 0;
+      var content = result.map(function(ing) {
+        console.log(parseFloat(ing.body.targetAmount) * 1.80469);
+        total += parseFloat(ing.body.targetAmount) * 1.80469;
+        return ing.body;
+      });
+      console.log(total);
+      socket.emit('totalSpace', total);
+    });
   })
 });
 
