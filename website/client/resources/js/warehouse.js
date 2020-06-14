@@ -76,9 +76,16 @@ document.getElementById('search').onclick = function(e) {
   }
 }
 
-function initMap(location) {
-  var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 4, center: location});
+var map;
+
+function initMap(locations) {
+  map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 4, center: locations[0]});
+  for (var location of locations) {
+    var marker = new google.maps.Marker({position: location, map: map});
+  }
+}
+function addMarker(locaton) {
   var marker = new google.maps.Marker({position: location, map: map});
 }
 
@@ -155,7 +162,27 @@ function addFoodToWarehouse(food) {
   addFood(food);
 }
 
+var lengthOfArray;
+var markers = [];
+
+socket.on('coordinatesRes', function(loc) {
+  console.log(loc);
+  markers.push(loc);
+  if (markers.length == lengthOfArray) {
+    initMap(markers);
+  }
+});
+
 firebase.auth().onAuthStateChanged(user => {
   userID = user.uid;
   socket.emit('getFoodWarehouse', userID);
+
+  socket.emit('getFoodBanks', userID);
+  socket.on('foodBankRes', function(banks) {
+    //initMap();
+    lengthOfArray = Object.values(banks).length;
+    for (var bank of Object.values(banks)) {
+      socket.emit('getCoordinates', bank.address);
+    }
+  });
 })
