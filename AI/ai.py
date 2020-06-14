@@ -53,7 +53,10 @@ def divide_food(food, banks, shelters):
    if calories < calories_req:
       deficit = (calories_req - calories) / len(shelters)
    
-   for i in 
+   for i in range(len(banks)):
+      c = calorie_requirements[i] - deficit
+      while c > 0:
+                  
 
 def 
 
