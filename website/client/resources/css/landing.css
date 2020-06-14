@@ -1,0 +1,43 @@
+.description {
+  background-image: url('../images/leaf.jpg');
+}
+.title {
+  padding-bottom: 15px;
+  background: linear-gradient(to bottom left, rgb(168, 244, 133), rgb(72, 110, 6));
+  margin: 0px;
+}
+.title a {
+  color: white;
+  font-size: 20px;
+}
+.description h2 {
+  font-size: 2.5em;
+  margin: 0px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.description .text {
+  width: 60%;
+  background: rgb(233, 233, 210);
+  margin: 0px auto;
+  padding: 15px;
+}
+.description p, li {
+  font-size: 1.4em;
+}
+.title h1 {
+  margin: 0px;
+}
+body {
+  margin: 0px;
+  padding: 0px;
+}
+h1 {
+  color: white;
+}
+h1, a, h2, p, li {
+	font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 700;
+}
