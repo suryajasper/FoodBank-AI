@@ -128,11 +128,11 @@ function sendToAI() {
         banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).once('value', function(bankSnapshot) {
           for (var foodName of Object.keys(foodbanks[bankName])) {
             warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(foodName).update({
-              quantity: Math.min(snapshot.val()[bankName][foodName].quantity-foodbanks[bankName][foodName], 0);
+              quantity: Math.min(snapshot.val()[bankName][foodName].quantity-foodbanks[bankName][foodName], 0)
             });
             if (foodName in bankSnapshot.val()) {
               banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').child(foodName).update({
-                quantity: parseInt(bank.snapshot.val()[foodName].quantity) + foodbanks[bankName][foodName];
+                quantity: parseInt(bank.snapshot.val()[foodName].quantity) + foodbanks[bankName][foodName]
               })
             } else {
               var update = {};
