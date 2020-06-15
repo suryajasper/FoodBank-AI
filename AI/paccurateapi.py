@@ -5,6 +5,7 @@ class Paccurate:
 		self.key = 'chA4UH4dubpaVngnOMfE0n675_uOaz22euI98eDoum-UkT1wERz7brJHcRyU2VZs'
 		self.packets = packets
 		self.box = box
+		print(self.packets, self.box)
 
 	def pack():
 		r = {}
@@ -21,6 +22,8 @@ class Paccurate:
 		box['name'] = 'box'
 		box['dimensions'] = self.box
 		r['boxtypes'] = box
+
+		print(r)
 
 		d = requests.post('http://api.paccurate.io/', data = r, headers={'Authorization': 'apike ' + self.key}).json()
 

@@ -2,6 +2,13 @@
 #define INFORMATION_H
 
 #include <QMainWindow>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QJsonObject>
 
 namespace Ui {
 class Information;
@@ -22,6 +29,8 @@ public slots:
 private:
     Ui::Information *ui;
     int calculateCalories(bool gender, int height, int age, double weight);
+    void getFood();
+    void displayFood(QJsonDocument json);
     int calories;
 };
 

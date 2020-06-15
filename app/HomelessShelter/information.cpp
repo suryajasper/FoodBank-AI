@@ -47,8 +47,45 @@ int Information::calculateCalories(bool gender, int height, int age, double weig
     return (c);
 }
 
+void Information::getFood() {
+    QNetworkRequest request(QUrl("http://35.239.86.72:4000/food"));
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkAccessManager nam;
+    QNetworkReply *reply = nam.get(request);
+
+    while (!reply->isFinished())
+    {
+        qApp->processEvents();
+    }
+
+    QByteArray response_data = reply->readAll();
+    qDebug() << " hell" << response_data;
+    QJsonDocument json = QJsonDocument::fromJson(response_data);
+
+    displayFood(json);
+}
+
+void Information::displayFood(QJsonDocument json) {
+    QJsonArray a = json.array();
+    for (int i = 0; i < a.size() - 25; i++) {
+        QJsonValue v = a.at(i);
+        QJsonObject o = v.toObject();
+        qDebug() << o;
+        QPushButton* shelterButton = new QPushButton(o.value("name").toString());
+        shelterButton->setMaximumHeight(200);
+        shelterButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        QObject::connect(shelterButton, SIGNAL(clicked()),this, SLOT(clickedSlot()));
+
+        ui->verticalLayout->addWidget(shelterButton);
+    }
+}
+
+
 void Information::next() {
     if (calories > 354) {
         ui->stackedWidget->setCurrentIndex(1);
+
+        getFood();
     }
 }
