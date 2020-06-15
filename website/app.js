@@ -176,7 +176,8 @@ app.post('/preferences', async function (req, res) {
     var ind = (snapshot.val() == null) ? 0 : Object.keys(snapshot.val()).length;
     homelessPref.child(ind).set({
       calories: req.body.calories,
-      choices: req.body.foods
+      choices: req.body.foods,
+      shelter: req.body.shelter
     })
   })
   res.status(200);
@@ -377,6 +378,43 @@ io.on('connection', function(socket){
       });
       socket.emit('totalSpace', total);
     });
+  })
+  socket.on('getRequests', function() {
+    var requests = {};
+    homelessPref.once('value', function(snapshot) {
+      for (var person of Object.values(snapshot.val())) {
+        for (var choice of person.choices) {
+          if (choice in requests) {
+            requests[choice] += 1;
+          } else {
+            requests[choice] = 1;
+          }
+        }
+      }
+      socket.emit('requestRes', requests);
+    });
+  })
+  socket.on('deliver', function(userID) {
+    homelessPref.once('value', function(snapshot) {
+      var preferences = snapshot.val();
+      for (var preference of preferences) {
+        banks.child(userID).once('value', function(snapshot) {
+          for (var bank of Object.keys(snapshot.val())) {
+            if (preference.shelter in snapshot.val()[bank].shelters) {
+              for (var food of preference.foods) {
+                var newQty = snapshot.val()[bank].food[food].quantity - 1;
+                if (newQty > 0) {
+                  bank.child(userID).child(bank).child('food').child(food).update({quantity: newQty});
+                } else {
+                  bank.child(userID).child(bank).child('food').child(food).remove();
+                }
+              }
+              break;
+            }
+          }
+        });
+      }
+    })
   })
 });
 

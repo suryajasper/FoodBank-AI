@@ -8,8 +8,9 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 <body>
+  <button style = "text-align: center; margin: 6px;" onclick = "showRequests()">Pending Requests</button>
   <div style = "width: 100%; height: 40vh;" id="map"></div>
-  <button id = "addFood">Add Food</button>
+  <button style = "text-align: center;margin: 6px;" id = "addFood">Add Food</button>
   <div id = "foodDiv">
   </div>
   <div id = "specpopup" style = "display: none;" class = "centered">
@@ -35,6 +36,22 @@
             <input type = "text" id = "food_name" style = "width: 550px;" placeholder = "apple" required><br>
             <input id = "search" value = "search" type = "submit"></input>
           </form>
+        </div>
+      </div>
+      <div id = "choiceDiv">
+      </div>
+    </div>
+  </div>
+  <div class = "centered">
+    <div id = "requestpopup" class = "popup" style = "background: linear-gradient(to bottom, white, rgb(187, 187, 187));display: none;">
+      <div class = "center-outside">
+        <div class = "center-div">
+          <div id = "requests">
+          </div>
+          <div style = "display: block;">
+            <button id = "cancel">Cancel</button>
+            <button style = "background-color: green" id = "deliver">Deliver</button>
+          </div>
         </div>
       </div>
       <div id = "choiceDiv">

@@ -189,6 +189,23 @@ socket.on('coordinatesRes', function(loc) {
   }
 });
 
+function showRequests() {
+  var requestDiv = document.getElementById('requestpopup');
+  socket.emit('getRequests');
+  socket.emit('requestRes', function(requests) {
+    requestDiv.style.display = 'block';
+    document.getElementById('cancel').onclick = function(e) {
+      e.preventDefault();
+      requestDiv.style.display = 'none';
+    }
+    document.getElementById('deliver').onclick = function(e) {
+      e.preventDefault();
+      socket.emit('deliver', requests);
+      requestDiv.style.display = 'none';
+    }
+  });
+}
+
 firebase.auth().onAuthStateChanged(user => {
   userID = user.uid;
   socket.emit('getFoodWarehouse', userID);
