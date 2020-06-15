@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(express.static(__dirname + '/client'));
 app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept');
 	next();
@@ -123,21 +123,21 @@ function sendToAI() {
 
   req.end(function(res) {
     var foodbanks = res.body;
-    warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+    warehouse.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').once('value', function(snapshot) {
       for (var bankName of Object.keys(foodbanks)) {
-        banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).once('value', function(bankSnapshot) {
+        banks.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').child(bankName).once('value', function(bankSnapshot) {
           for (var foodName of Object.keys(foodbanks[bankName])) {
-            warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(foodName).update({
+            warehouse.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').child(foodName).update({
               quantity: Math.min(snapshot.val()[bankName][foodName].quantity-foodbanks[bankName][foodName], 0)
             });
             if (foodName in bankSnapshot.val()) {
-              banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').child(foodName).update({
+              banks.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').child(bankName).child('foods').child(foodName).update({
                 quantity: parseInt(bank.snapshot.val()[foodName].quantity) + foodbanks[bankName][foodName]
               })
             } else {
               var update = {};
               update[foodName] = snapshot.val()[foodName];
-              banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').update(update);
+              banks.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').child(bankName).child('foods').update(update);
             }
           }
         });
@@ -147,7 +147,7 @@ function sendToAI() {
 }
 
 app.get('/warehouse', async function(req, res) {
-  warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+  warehouse.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').once('value', function(snapshot) {
     res.status(200);
   	res.json(Object.values(snapshot.val()));
   	res.end();
@@ -155,7 +155,7 @@ app.get('/warehouse', async function(req, res) {
 });
 
 app.get('/shelters', async function(req, res) {
-  banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+  banks.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').once('value', function(snapshot) {
     var homelessArr = [];
     for (var _bank of Object.keys(snapshot.val())) {
       if ('shelters' in snapshot.val()[_bank]) {
@@ -204,7 +204,7 @@ app.get('/preferences', async function (req, res) {
 })
 
 app.get('/banks', async function(req, res) {
-  banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+  banks.child('lZJYEWkanBfbxeVY5qfdzMqtJTA3').once('value', function(snapshot) {
     res.status(200);
     var toReturn = {};
     var allBanks = snapshot.val();
@@ -425,7 +425,7 @@ io.on('connection', function(socket){
         });
       }
     })
-  })
+  });
   socket.on('getPaccurate', function(packetArr, _box) {
     var unirest = require('unirest');
     var stuff = {
@@ -433,11 +433,14 @@ io.on('connection', function(socket){
       packet: packetArr
     };
     console.log(stuff);
-    console.log(JSON.stringify(stuff));
-    unirest.post('http://aifoodbank.suryajasper.com/pack').send(JSON.stringify(stuff)).then(function(res) {
-      console.log(res.body);
-      socket.emit('svgs', res.body.svgs);
-    });
+    unirest
+      .post('http://aifoodbank.suryajasper.com/pack')
+      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+      .send(JSON.stringify(stuff))
+      .then(function(res) {
+        console.log(res.body);
+        socket.emit('svgs', res.body.svgs);
+      });
   })
 });
 
