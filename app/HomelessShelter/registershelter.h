@@ -6,6 +6,11 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QPushButton>
+#include "menu.h"
 
 namespace Ui {
 class RegisterShelter;
@@ -19,10 +24,14 @@ public:
     RegisterShelter(QWidget *parent = nullptr);
     ~RegisterShelter();
 
+public slots:
+    void clickedSlot();
+
 private:
     Ui::RegisterShelter *ui;
     QUrl server;
     void getShelters();
+    void displayShelters(QJsonDocument json);
 };
 
 #endif // REGISTERSHELTER_H

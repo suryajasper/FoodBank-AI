@@ -61,7 +61,7 @@ def divide_food(food, banks, shelters):
 
 @app.route('/dividefood')
 def divide_endpoint():
-   food = requests.get(SERVER_NAME + 'food_availability').json()
+   food = requests.get(SERVER_NAME + 'food').json()
    banks = requests.get(SERVER_NAME + 'banks').json()
    food = requests.get(SERVER_NAME + 'shelters').json()
    return (jsonify(divide_food(food, banks, shelters)))

@@ -14,9 +14,12 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -25,6 +28,12 @@ class Ui_RegisterShelter
 {
 public:
     QWidget *centralwidget;
+    QLabel *label;
+    QLabel *label_2;
+    QScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *verticalLayout;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -35,6 +44,34 @@ public:
         RegisterShelter->resize(920, 600);
         centralwidget = new QWidget(RegisterShelter);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
+        label = new QLabel(centralwidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(330, 20, 251, 51));
+        QFont font;
+        font.setPointSize(22);
+        label->setFont(font);
+        label_2 = new QLabel(centralwidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(310, 60, 281, 41));
+        QFont font1;
+        font1.setPointSize(14);
+        label_2->setFont(font1);
+        scrollArea = new QScrollArea(centralwidget);
+        scrollArea->setObjectName(QStringLiteral("scrollArea"));
+        scrollArea->setGeometry(QRect(120, 110, 651, 441));
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 632, 439));
+        verticalLayoutWidget = new QWidget(scrollAreaWidgetContents);
+        verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
+        verticalLayoutWidget->setGeometry(QRect(20, 20, 611, 401));
+        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        scrollArea->setWidget(scrollAreaWidgetContents);
         RegisterShelter->setCentralWidget(centralwidget);
         menubar = new QMenuBar(RegisterShelter);
         menubar->setObjectName(QStringLiteral("menubar"));
@@ -52,6 +89,8 @@ public:
     void retranslateUi(QMainWindow *RegisterShelter)
     {
         RegisterShelter->setWindowTitle(QApplication::translate("RegisterShelter", "MainWindow", nullptr));
+        label->setText(QApplication::translate("RegisterShelter", "Homeless Shelters", nullptr));
+        label_2->setText(QApplication::translate("RegisterShelter", "Select the one you are working at", nullptr));
     } // retranslateUi
 
 };
