@@ -186,9 +186,16 @@ firebase.auth().onAuthStateChanged(user => {
     socket.on('totalSpace', function(occupied) {
       var packets =[];
       for (var cube of occupied) {
-        packets.push({dimensions: [Math.cbrt(cube), Math.cbrt(cube), Math.cbrt(cube)], quantity: 1});
+        packets.push({
+          dimensions: {x: Math.cbrt(cube), y: Math.cbrt(cube), z: Math.cbrt(cube)},
+          quantity: 1
+        });
       }
-      socket.emit('getPaccurate', packets, [Math.cbrt(bank.maxStorage),Math.cbrt(bank.maxStorage),Math.cbrt(bank.maxStorage)]);
+      socket.emit('getPaccurate', packets, {
+        x: Math.cbrt(bank.maxStorage),
+        y: Math.cbrt(bank.maxStorage),
+        z: Math.cbrt(bank.maxStorage)
+      });
       socket.on('svgs', function(svgs) {
         document.getElementById('embed').innerHTML = svgs;
       });

@@ -102,7 +102,7 @@ function getCoordinates(address) {
   return req;
 }
 
-var serviceAccount = require("../../secret/foodbankai-service-account.json");
+var serviceAccount = require("/Users/suryajasper2004/Downloads/food-bank-ai-service-account.json");
 var calMultiplier = 32;
 
 admin.initializeApp({
@@ -119,7 +119,7 @@ var homelessPref = database.ref('preferences');
 function sendToAI() {
   var unirest = require('unirest');
 
-  var req = unirest("GET", 'aifoodbank.suryajasper.com/dividefood');
+  var req = unirest("GET", 'http://aifoodbank.suryajasper.com/dividefood');
 
   req.end(function(res) {
     var foodbanks = res.body;
@@ -149,7 +149,7 @@ function sendToAI() {
 app.get('/warehouse', async function(req, res) {
   warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
     res.status(200);
-  	res.json(snapshot.val());
+  	res.json(Object.values(snapshot.val()));
   	res.end();
   })
 });
@@ -428,12 +428,14 @@ io.on('connection', function(socket){
   })
   socket.on('getPaccurate', function(packetArr, _box) {
     var unirest = require('unirest');
-    var req = unirest("GET", 'aifoodbank.suryajasper.com/pack');
-    req.query({
-      box: [_box],
-      packets: packetArr
-    });
-    req.end(function(res) {
+    var stuff = {
+      box: _box,
+      packet: packetArr
+    };
+    console.log(stuff);
+    console.log(JSON.stringify(stuff));
+    unirest.post('http://aifoodbank.suryajasper.com/pack').send(JSON.stringify(stuff)).then(function(res) {
+      console.log(res.body);
       socket.emit('svgs', res.body.svgs);
     });
   })
