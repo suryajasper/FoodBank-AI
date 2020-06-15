@@ -74,14 +74,14 @@ void Information::displayFood(QJsonDocument json) {
         QJsonValue v = a.at(i);
         QJsonObject o = v.toObject();
         qDebug() << o;
-        int ca = (o.value("calories").toInt() / o.value("quantitiy").toInt());
-        QPushButton* shelterButton = new QPushButton(o.value("name").toString().append("calories: ").append(QString::number(ca)));
+        int ca = (o.value("calories").toDouble() / o.value("quantity").toInt());
+        qDebug() << ca;
+        QPushButton* shelterButton = new QPushButton(o.value("name").toString().append(" calories: ").append(QString::number(ca)));
         shelterButton->setMaximumHeight(200);
         shelterButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
         QObject::connect(shelterButton, SIGNAL(clicked()),this, SLOT(foodSelected()));
         QSlider* slider = new QSlider(Qt::Orientation::Horizontal);
-        QObject::connect(slider, SIGNAL(valueChanged()),this, SLOT(sliderChanged()));
-
+        QObject::connect(slider, SIGNAL(valueChanged(int value)),this, SLOT(sliderChanged()));
         ui->verticalLayout->addWidget(shelterButton);
         ui->verticalLayout->addWidget(slider);
     }
@@ -100,12 +100,14 @@ void Information::foodSelected() {
     QPushButton* buttonSender = qobject_cast<QPushButton*>(sender()); // retrieve the button you have clicked
     QString buttonText = buttonSender->text();
 
-    QStringList l = buttonText.split(QRegExp("\s+"));
+    QStringList l = buttonText.split(QRegExp(" "));
+    qDebug() << l;
     selectedButton = l.takeAt(2).toInt();
 }
 
 void Information::sliderChanged(int value) {
     qDebug() << value;
-    currCalories += value / 10;
+    currCalories += (value / 10) * selectedButton;
+    qDebug() << currCalories;
     ui->progressBar->setValue(currCalories / calories * 100);
 }
