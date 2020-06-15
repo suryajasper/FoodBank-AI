@@ -9,6 +9,7 @@ Information::Information(QWidget *parent) :
     ui->setupUi(this);
 
     QObject::connect(ui->View, SIGNAL(clicked()),this, SLOT(clickedSlot()));
+    QObject::connect(ui->next, SIGNAL(clicked()),this, SLOT(next()));
 }
 
 Information::~Information()
@@ -43,4 +44,8 @@ int Information::calculateCalories(bool gender, int height, int age, double weig
 
     qDebug() << height << age << weight << c;
     return (c);
+}
+
+void Information::next() {
+    ui->stackedWidget->setCurrentIndex(1);
 }

@@ -56,8 +56,9 @@ def divide_food(food, banks, shelters):
    
    for i in range(len(banks)):
       c = calorie_requirements[i] - deficit
-      while c > 0:
+      # while c > 0:
 
+   return {}
 
 @app.route('/dividefood')
 def divide_endpoint():

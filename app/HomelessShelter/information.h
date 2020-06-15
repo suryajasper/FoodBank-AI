@@ -17,6 +17,7 @@ public:
 
 public slots:
     void clickedSlot();
+    void next();
 
 private:
     Ui::Information *ui;

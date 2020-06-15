@@ -19,10 +19,13 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -46,8 +49,14 @@ public:
     QLabel *label_6;
     QLabel *calories;
     QPushButton *View;
-    QPushButton *pushButton_2;
+    QPushButton *next;
     QWidget *page_2;
+    QProgressBar *progressBar;
+    QLabel *label_7;
+    QScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *verticalLayout;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -130,12 +139,37 @@ public:
         View = new QPushButton(page);
         View->setObjectName(QStringLiteral("View"));
         View->setGeometry(QRect(360, 470, 75, 23));
-        pushButton_2 = new QPushButton(page);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(680, 500, 75, 23));
+        next = new QPushButton(page);
+        next->setObjectName(QStringLiteral("next"));
+        next->setGeometry(QRect(680, 500, 75, 23));
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QStringLiteral("page_2"));
+        progressBar = new QProgressBar(page_2);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setGeometry(QRect(140, 80, 561, 23));
+        progressBar->setValue(24);
+        label_7 = new QLabel(page_2);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setGeometry(QRect(230, 20, 381, 41));
+        QFont font3;
+        font3.setPointSize(22);
+        label_7->setFont(font3);
+        label_7->setAlignment(Qt::AlignCenter);
+        scrollArea = new QScrollArea(page_2);
+        scrollArea->setObjectName(QStringLiteral("scrollArea"));
+        scrollArea->setGeometry(QRect(190, 130, 471, 381));
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 469, 379));
+        verticalLayoutWidget = new QWidget(scrollAreaWidgetContents);
+        verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
+        verticalLayoutWidget->setGeometry(QRect(10, 10, 451, 351));
+        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        scrollArea->setWidget(scrollAreaWidgetContents);
         stackedWidget->addWidget(page_2);
         Information->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Information);
@@ -168,7 +202,8 @@ public:
         label_6->setText(QApplication::translate("Information", "Calories", nullptr));
         calories->setText(QApplication::translate("Information", "354", nullptr));
         View->setText(QApplication::translate("Information", "View", nullptr));
-        pushButton_2->setText(QApplication::translate("Information", "Next ->", nullptr));
+        next->setText(QApplication::translate("Information", "Next ->", nullptr));
+        label_7->setText(QApplication::translate("Information", "% Daily calories compete", nullptr));
     } // retranslateUi
 
 };
