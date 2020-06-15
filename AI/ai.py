@@ -71,6 +71,7 @@ def divide_endpoint():
 def pack():
    if request.method == 'POST':
       json = request.get_json(force=True)
+      print(json)
       p = Paccurate(json['packets'], json['box'])
       result = p.pack()
       return(jsonify(result))
