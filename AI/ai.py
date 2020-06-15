@@ -76,5 +76,4 @@ def pack():
       return(jsonify(result))
 
 if __name__ == '__main__':
-   initialize_vars()
    app.run()
