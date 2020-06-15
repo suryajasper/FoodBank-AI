@@ -1,6 +1,7 @@
 #include "information.h"
 #include "ui_information.h"
 #include <QtDebug>
+#include <QSlider>
 
 Information::Information(QWidget *parent) :
     QMainWindow(parent),
@@ -48,7 +49,7 @@ int Information::calculateCalories(bool gender, int height, int age, double weig
 }
 
 void Information::getFood() {
-    QNetworkRequest request(QUrl("http://35.239.86.72:4000/food"));
+    QNetworkRequest request(QUrl("http://35.239.86.72:4000/warehouse"));
     //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     QNetworkAccessManager nam;
@@ -68,16 +69,21 @@ void Information::getFood() {
 
 void Information::displayFood(QJsonDocument json) {
     QJsonArray a = json.array();
-    for (int i = 0; i < a.size() - 25; i++) {
+    qDebug() << a;
+    for (int i = 0; i < a.size(); i++) {
         QJsonValue v = a.at(i);
         QJsonObject o = v.toObject();
         qDebug() << o;
-        QPushButton* shelterButton = new QPushButton(o.value("name").toString());
+        int ca = (o.value("calories").toInt() / o.value("quantitiy").toInt());
+        QPushButton* shelterButton = new QPushButton(o.value("name").toString().append("calories: ").append(QString::number(ca)));
         shelterButton->setMaximumHeight(200);
         shelterButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        QObject::connect(shelterButton, SIGNAL(clicked()),this, SLOT(clickedSlot()));
+        QObject::connect(shelterButton, SIGNAL(clicked()),this, SLOT(foodSelected()));
+        QSlider* slider = new QSlider(Qt::Orientation::Horizontal);
+        QObject::connect(slider, SIGNAL(valueChanged()),this, SLOT(sliderChanged()));
 
         ui->verticalLayout->addWidget(shelterButton);
+        ui->verticalLayout->addWidget(slider);
     }
 }
 
@@ -88,4 +94,18 @@ void Information::next() {
 
         getFood();
     }
+}
+
+void Information::foodSelected() {
+    QPushButton* buttonSender = qobject_cast<QPushButton*>(sender()); // retrieve the button you have clicked
+    QString buttonText = buttonSender->text();
+
+    QStringList l = buttonText.split(QRegExp("\s+"));
+    selectedButton = l.takeAt(2).toInt();
+}
+
+void Information::sliderChanged(int value) {
+    qDebug() << value;
+    currCalories += value / 10;
+    ui->progressBar->setValue(currCalories / calories * 100);
 }

@@ -57,6 +57,7 @@ public:
     QWidget *scrollAreaWidgetContents;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
+    QLabel *label_8;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -148,7 +149,7 @@ public:
         progressBar = new QProgressBar(page_2);
         progressBar->setObjectName(QStringLiteral("progressBar"));
         progressBar->setGeometry(QRect(140, 80, 561, 23));
-        progressBar->setValue(24);
+        progressBar->setValue(0);
         label_7 = new QLabel(page_2);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(230, 20, 381, 41));
@@ -158,7 +159,7 @@ public:
         label_7->setAlignment(Qt::AlignCenter);
         scrollArea = new QScrollArea(page_2);
         scrollArea->setObjectName(QStringLiteral("scrollArea"));
-        scrollArea->setGeometry(QRect(190, 130, 471, 381));
+        scrollArea->setGeometry(QRect(180, 160, 471, 381));
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
@@ -170,6 +171,11 @@ public:
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
         scrollArea->setWidget(scrollAreaWidgetContents);
+        label_8 = new QLabel(page_2);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(260, 120, 331, 31));
+        label_8->setFont(font2);
+        label_8->setAlignment(Qt::AlignCenter);
         stackedWidget->addWidget(page_2);
         Information->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Information);
@@ -204,6 +210,7 @@ public:
         View->setText(QApplication::translate("Information", "View", nullptr));
         next->setText(QApplication::translate("Information", "Next ->", nullptr));
         label_7->setText(QApplication::translate("Information", "% Daily calories compete", nullptr));
+        label_8->setText(QApplication::translate("Information", "Select Your Food Preferences", nullptr));
     } // retranslateUi
 
 };
