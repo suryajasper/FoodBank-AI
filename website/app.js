@@ -185,14 +185,20 @@ app.post('/preferences', async function (req, res) {
 })
 
 app.get('/preferences', async function (req, res) {
+  var requests = {};
   homelessPref.once('value', function(snapshot) {
-    var ind = (snapshot.val() == null) ? 0 : Object.keys(snapshot.val()).length;
-    homelessPref.child(ind).set({
-      calories: req.body.calories,
-      choices: req.body.foods,
-      shelter: req.body.shelter
-    })
-  })
+    for (var person of Object.values(snapshot.val())) {
+      for (var choice of person.choices) {
+        if (choice in requests) {
+          requests[choice] += 1;
+        } else {
+          requests[choice] = 1;
+        }
+      }
+    }
+    socket.emit('requestRes', requests);
+  });
+  res.json(requests);
   res.status(200);
   res.end();
 })
