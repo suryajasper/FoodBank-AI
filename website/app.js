@@ -377,9 +377,9 @@ io.on('connection', function(socket){
       });
     });
     Promise.all(results).then(function(result) {
-      var total = 0;
+      var total = [];
       var content = result.map(function(ing) {
-        total += parseFloat(ing.body.targetAmount) * 1.80469;
+        total.push(parseFloat(ing.body.targetAmount) * 1.80469);
         return ing.body;
       });
       socket.emit('totalSpace', total);
@@ -425,6 +425,17 @@ io.on('connection', function(socket){
         });
       }
     })
+  })
+  socket.on('getPaccurate', function(packetArr, _box) {
+    var unirest = require('unirest');
+    var req = unirest("GET", 'aifoodbank.suryajasper.com/pack');
+    req.query({
+      box: [_box],
+      packets: packetArr
+    });
+    req.end(function(res) {
+      socket.emit('svgs', res.body.svgs);
+    });
   })
 });
 
