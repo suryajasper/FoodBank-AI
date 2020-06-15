@@ -102,7 +102,7 @@ function getCoordinates(address) {
   return req;
 }
 
-var serviceAccount = require("../../secret/foodbankai-service-account.json");
+var serviceAccount = require("/Users/suryajasper2004/Downloads/food-bank-ai-service-account.json");
 var calMultiplier = 32;
 
 admin.initializeApp({
@@ -388,16 +388,20 @@ io.on('connection', function(socket){
   socket.on('getRequests', function() {
     var requests = {};
     homelessPref.once('value', function(snapshot) {
-      for (var person of Object.values(snapshot.val())) {
-        for (var choice of person.choices) {
-          if (choice in requests) {
-            requests[choice] += 1;
-          } else {
-            requests[choice] = 1;
+      if (snapshot.val() !== null) {
+        for (var person of Object.values(snapshot.val())) {
+          for (var choice of person.choices) {
+            if (choice in requests) {
+              requests[choice] += 1;
+            } else {
+              requests[choice] = 1;
+            }
           }
         }
+        socket.emit('requestRes', requests);
+      } else {
+        socket.emit('requestResFail');
       }
-      socket.emit('requestRes', requests);
     });
   })
   socket.on('deliver', function(userID) {

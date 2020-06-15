@@ -192,7 +192,12 @@ socket.on('coordinatesRes', function(loc) {
 function showRequests() {
   var requestDiv = document.getElementById('requestpopup');
   socket.emit('getRequests');
-  socket.emit('requestRes', function(requests) {
+  socket.on('requestRes', function(requests) {
+    for (var food of Object.keys(requests)) {
+      var li = document.createElement('li');
+      li.innerHTML = food + ': ' + requests[food].toString();
+      requestDiv.appendChild(li);
+    }
     requestDiv.style.display = 'block';
     document.getElementById('cancel').onclick = function(e) {
       e.preventDefault();
@@ -204,6 +209,9 @@ function showRequests() {
       requestDiv.style.display = 'none';
     }
   });
+  socket.on('requestResFail', function() {
+    window.alert('No current requests!');
+  })
 }
 
 firebase.auth().onAuthStateChanged(user => {
