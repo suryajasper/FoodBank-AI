@@ -22,6 +22,7 @@ public slots:
 private:
     Ui::Information *ui;
     int calculateCalories(bool gender, int height, int age, double weight);
+    int calories;
 };
 
 #endif // INFORMATION_H

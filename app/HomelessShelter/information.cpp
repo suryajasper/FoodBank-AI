@@ -29,7 +29,8 @@ void Information::clickedSlot() {
         g = false;
     }
     int c = calculateCalories(g, h, ui->age->text().toInt(), w);
-    ui->calories->setText(QString::number(c));
+    calories = c;
+    ui->calories->setText(QString::number(calories));
 }
 
 //Miflin St. Jeor Equation
@@ -47,5 +48,7 @@ int Information::calculateCalories(bool gender, int height, int age, double weig
 }
 
 void Information::next() {
-    ui->stackedWidget->setCurrentIndex(1);
+    if (calories > 354) {
+        ui->stackedWidget->setCurrentIndex(1);
+    }
 }
