@@ -168,6 +168,14 @@ function createHomelessShelters(res) {
   }
 }
 
+function sum(arr) {
+  var total = 0;
+  for (var el of arr) {
+    total += el;
+  }
+  return total;
+}
+
 firebase.auth().onAuthStateChanged(user => {
   userID = user.uid;
   socket.emit('getFood', userID, foodBank);
@@ -176,8 +184,15 @@ firebase.auth().onAuthStateChanged(user => {
     if ('food' in bank)
       socket.emit('convertIngs', Object.values(bank.food));
     socket.on('totalSpace', function(occupied) {
-      console.log((occupied/parseFloat(bank.maxStorage)*100).toString() + '% occupied');
-      document.getElementById('filler').style.width = (occupied/parseFloat(bank.maxStorage)*100).toString() + "%";
+      var packets =[];
+      for (var cube of occupied) {
+        packets.push({dimensions: [Math.cbrt(cube), Math.cbrt(cube), Math.cbrt(cube)], quantity: 1});
+      }
+      socket.emit('getPaccurate', packets, [Math.cbrt(bank.maxStorage),Math.cbrt(bank.maxStorage),Math.cbrt(bank.maxStorage)]);
+      socket.on('svgs', function(svgs) {
+        document.getElementById('embed').innerHTML = svgs;
+      });
+      document.getElementById('filler').style.width = (sum(occupied)/parseFloat(bank.maxStorage)*100).toString() + "%";
     });
     console.log(bank);
     document.getElementById('address').innerHTML = 'Address: ' + bank.address;
