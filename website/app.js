@@ -102,7 +102,7 @@ function getCoordinates(address) {
   return req;
 }
 
-var serviceAccount = require("/Users/suryajasper2004/Downloads/food-bank-ai-service-account.json");
+var serviceAccount = require("../../secret/foodbankai-service-account.json");
 var calMultiplier = 32;
 
 admin.initializeApp({
@@ -157,10 +157,10 @@ app.get('/warehouse', async function(req, res) {
 app.get('/shelters', async function(req, res) {
   banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
     var homelessArr = [];
-    for (var bank of Object.values(snapshot.val())) {
-      if ('shelters' in bank) {
-        for (var shelter of Object.values(bank.shelters)) {
-          var newShelter = {position: shelter.geometry.location, address: shelter.formatted_address, name: shelter.name};
+    for (var _bank of Object.keys(snapshot.val())) {
+      if ('shelters' in snapshot.val()[_bank]) {
+        for (var shelter of Object.values(snapshot.val()[_bank].shelters)) {
+          var newShelter = {position: shelter.geometry.location, address: shelter.formatted_address, name: shelter.name, bank: _bank};
           homelessArr.push(newShelter);
         }
       }
