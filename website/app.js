@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(express.static(__dirname + '/client'));
 app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept');
 	next();
@@ -425,7 +425,7 @@ io.on('connection', function(socket){
         });
       }
     })
-  })
+  });
   socket.on('getPaccurate', function(packetArr, _box) {
     var unirest = require('unirest');
     var stuff = {
@@ -433,11 +433,14 @@ io.on('connection', function(socket){
       packet: packetArr
     };
     console.log(stuff);
-    console.log(JSON.stringify(stuff));
-    unirest.post('http://aifoodbank.suryajasper.com/pack').send(JSON.stringify(stuff)).then(function(res) {
-      console.log(res.body);
-      socket.emit('svgs', res.body.svgs);
-    });
+    unirest
+      .post('http://aifoodbank.suryajasper.com/pack')
+      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+      .send(JSON.stringify(stuff))
+      .then(function(res) {
+        console.log(res.body);
+        socket.emit('svgs', res.body.svgs);
+      });
   })
 });
 
