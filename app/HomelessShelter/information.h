@@ -9,6 +9,7 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QJsonObject>
+#include <QPushButton>
 
 namespace Ui {
 class Information;
@@ -25,6 +26,8 @@ public:
 public slots:
     void clickedSlot();
     void next();
+    void foodSelected();
+    void sliderChanged(int value);
 
 private:
     Ui::Information *ui;
@@ -32,6 +35,8 @@ private:
     void getFood();
     void displayFood(QJsonDocument json);
     int calories;
+    int currCalories;
+    int selectedButton;
 };
 
 #endif // INFORMATION_H

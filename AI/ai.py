@@ -1,6 +1,7 @@
 from flask import Flask, escape, request, render_template, make_response, url_for, redirect, jsonify
 import requests
 from paccurateapi import Paccurate
+
 app = Flask(__name__)
 
 SERVER_NAME = 'suryajasper.com'

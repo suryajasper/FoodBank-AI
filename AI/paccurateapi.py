@@ -7,24 +7,25 @@ class Paccurate:
 		self.box = box
 		print(self.packets, self.box)
 
-	def pack():
+	def pack(self):
 		r = {}
 		items = []
 		for i in range(len(self.packets)):
 			item = {'refid': i}
 			item['dimensions'] = self.packets[i]['dimensions']
 			item['quantity'] = self.packets[i]['quantity']
+			item['weight'] = 0
 			items.append(item)
-		r['itemsets'] = items
+		r['itemSets'] = items
 		
 		box = {}
 		box['weightmax'] = 0
 		box['name'] = 'box'
 		box['dimensions'] = self.box
-		r['boxtypes'] = box
+		r['boxTypes'] = [box]
 
 		print(r)
 
 		d = requests.post('http://api.paccurate.io/', data = r, headers={'Authorization': 'apike ' + self.key}).json()
-
+		print(d)
 		return {'coords': d['boxes'][0]['box']['items'], 'svgs': d['svgs']}
