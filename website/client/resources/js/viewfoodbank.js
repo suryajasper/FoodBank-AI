@@ -181,7 +181,7 @@ firebase.auth().onAuthStateChanged(user => {
     });
     console.log(bank);
     document.getElementById('address').innerHTML = 'Address: ' + bank.address;
-    socket.emit('findHomelessShelter', userID, foodBank, 10000);
+    socket.emit('findHomelessShelter', userID, foodBank, 5000);
     socket.on('foundHomelessShelters', createHomelessShelters);
     socket.emit('getCoordinates', bank.address);
     socket.on('coordinatesRes', function(loc) {

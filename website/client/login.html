@@ -8,16 +8,20 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 <body>
+  <style>
+    body {
+      background-image: url('resources/images/leaf.jpg');
+    }
+  </style>
   <div class = "centered">
-    <form id = "loginform">
+    <form id = "loginform" class = "loginsignup">
       Email Address<br>
       <input id = "email" type="text" name="user" placeholder = "email address"><br>
       Password<br>
-      <input id = "password" type="password" placeholder = "password">
-      <br><br>
-      <input id = "login" type="button" value="Log in">
+      <input id = "password" type="password" placeholder = "password"><br>
+      <input id = "login" type="button" value="Log in"><br>
+      <a href="signup.html">Create an Account instead</a>
     </form>
-    <a href="signup.html">Sign Up</a>
   </div>
   <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>

@@ -63,7 +63,7 @@
 input {
   font-size: 15px;
 }
-input[type=text] {
+input[type=text], input[type=password] {
   border: none;
   padding: 8px;
   cursor: pointer;
@@ -72,7 +72,7 @@ input[type=text] {
   color: black;
   -webkit-transition: 0.5s;
 }
-input[type=text]:hover {
+input[type=text]:hover, input[type=password]:hover {
   background-color: rgb(101, 101, 101);
   color: white;
   -webkit-transition: 0.5s;
@@ -175,4 +175,16 @@ a.warehouseAnchor {
 	background: rgb(242, 86, 86);
 	background-size:0% 100%;
 	background-position:0 100px;
+}
+.loginsignup {
+  border-radius: 3px;
+  background-color: white;
+  text-align: center;
+  padding: 25px;
+}
+.loginsignup * {
+  margin: 7px;
+}
+.loginsignup a {
+  text-align: center;
 }

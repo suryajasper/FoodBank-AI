@@ -8,9 +8,14 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 <body>
+  <style>
+    body {
+      background-image: url('resources/images/leaf.jpg');
+    }
+  </style>
   <div class = "centered">
-    <form id = "form">
-      <div id = "signupbar" class="centered" style = "margin-top: 5px; text-align: center;">
+    <div id = "signupbar" class="centered" style = "margin-top: 5px; text-align: center;">
+      <form id = "form" class = "loginsignup">
         Admin Email Address<br>
         <input type="text" id = "email" name="user" autocomplete="off" required><br>
         Food Bank Name <br>
@@ -20,8 +25,8 @@
         Confirm Password<br>
         <input type="password" id = "confirmpassword" autocomplete="off" pattern=".{6,}" placeholder="Confirm Password" required><br>
         <input id = "signupbutton" type="button" value="Submit">
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
   <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>

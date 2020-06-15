@@ -1,7 +1,14 @@
 var admin = require('firebase-admin');
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 app.use(express.static(__dirname + '/client'));
+app.use((req, res, next) => {
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept');
+	next();
+});
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 4000;
@@ -64,6 +71,7 @@ function searchIngredients(ingredient) {
   var req = unirest("GET", "https://api.spoonacular.com/food/ingredients/autocomplete?query=" + ingredient + "&number=7&metaInformation=true");
 
   req.query({
+    "apiKey": "bc240f5675d94b39b9a096f5a949a9d7",
     "defaultCss": true
   });
 
@@ -88,12 +96,13 @@ function getHomelessShelters(location, radius) {
 
 function getCoordinates(address) {
   address = replaceAll(address, ' ', '+');
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+' + address + '&key=AIzaSyB874rZyp7PmkKpMdfpbQfKXSSLEJwglvM';
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB874rZyp7PmkKpMdfpbQfKXSSLEJwglvM';
   var unirest = require("unirest");
   var req = unirest("GET", url);
   return req;
 }
 
+var serviceAccount = require("../../secret/foodbankai-service-account.json");
 var calMultiplier = 32;
 
 admin.initializeApp({
@@ -105,6 +114,108 @@ var database = admin.database();
 var userInfo = database.ref('userInfo');
 var warehouse = database.ref('warehouse');
 var banks = database.ref('banks');
+var homelessPref = database.ref('preferences');
+
+function sendToAI() {
+  var unirest = require('unirest');
+
+  var req = unirest("GET", 'aifoodbank.suryajasper.com/dividefood');
+
+  req.end(function(res) {
+    var foodbanks = res.body;
+    warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+      for (var bankName of Object.keys(foodbanks)) {
+        banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).once('value', function(bankSnapshot) {
+          for (var foodName of Object.keys(foodbanks[bankName])) {
+            warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(foodName).update({
+              quantity: Math.min(snapshot.val()[bankName][foodName].quantity-foodbanks[bankName][foodName], 0)
+            });
+            if (foodName in bankSnapshot.val()) {
+              banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').child(foodName).update({
+                quantity: parseInt(bank.snapshot.val()[foodName].quantity) + foodbanks[bankName][foodName]
+              })
+            } else {
+              var update = {};
+              update[foodName] = snapshot.val()[foodName];
+              banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').child(bankName).child('foods').update(update);
+            }
+          }
+        });
+      }
+    })
+  });
+}
+
+app.get('/warehouse', async function(req, res) {
+  warehouse.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+    res.status(200);
+  	res.json(snapshot.val());
+  	res.end();
+  })
+});
+
+app.get('/shelters', async function(req, res) {
+  banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+    var homelessArr = [];
+    for (var _bank of Object.keys(snapshot.val())) {
+      if ('shelters' in snapshot.val()[_bank]) {
+        for (var shelter of Object.values(snapshot.val()[_bank].shelters)) {
+          var newShelter = {position: shelter.geometry.location, address: shelter.formatted_address, name: shelter.name, bank: _bank};
+          homelessArr.push(newShelter);
+        }
+      }
+    }
+    res.status(200);
+  	res.json(homelessArr);
+  	res.end();
+  })
+});
+
+app.post('/preferences', async function (req, res) {
+  homelessPref.once('value', function(snapshot) {
+    var ind = (snapshot.val() == null) ? 0 : Object.keys(snapshot.val()).length;
+    homelessPref.child(ind).set({
+      calories: req.body.calories,
+      choices: req.body.foods,
+      shelter: req.body.shelter
+    })
+  })
+  res.status(200);
+  res.end();
+})
+
+app.get('/preferences', async function (req, res) {
+  var requests = {};
+  homelessPref.once('value', function(snapshot) {
+    for (var person of Object.values(snapshot.val())) {
+      for (var choice of person.choices) {
+        if (choice in requests) {
+          requests[choice] += 1;
+        } else {
+          requests[choice] = 1;
+        }
+      }
+    }
+    socket.emit('requestRes', requests);
+  });
+  res.json(requests);
+  res.status(200);
+  res.end();
+})
+
+app.get('/banks', async function(req, res) {
+  banks.child('wQVmzq74oNMdTleSKiQW9TbbVWh2').once('value', function(snapshot) {
+    res.status(200);
+    var toReturn = {};
+    var allBanks = snapshot.val();
+    for (var bank of Object.keys(allBanks)) {
+      delete allBanks[bank]['thumbnail'];
+      toReturn[bank] = allBanks[bank];
+    }
+    res.json(toReturn);
+  	res.end();
+  })
+});
 
 io.on('connection', function(socket){
   socket.on('createUser', function(userID, _orgName) {
@@ -130,7 +241,6 @@ io.on('connection', function(socket){
     })
   })
   socket.on('getFoodBank', function(userID, bankName) {
-    console.log(userID);
     banks.child(userID).once('value', function(snapshot) {
       socket.emit('foodBankIndRes', snapshot.val()[bankName]);
     })
@@ -236,6 +346,7 @@ io.on('connection', function(socket){
             if (res.error) {console.log(res.error);}
             else {
               socket.emit('foundHomelessShelters', res.body.results);
+              banks.child(userID).child(bankName).update({shelters: res.body.results});
             }
           })
         })
@@ -273,6 +384,47 @@ io.on('connection', function(socket){
       });
       socket.emit('totalSpace', total);
     });
+  })
+  socket.on('getRequests', function() {
+    var requests = {};
+    homelessPref.once('value', function(snapshot) {
+      if (snapshot.val() !== null) {
+        for (var person of Object.values(snapshot.val())) {
+          for (var choice of person.choices) {
+            if (choice in requests) {
+              requests[choice] += 1;
+            } else {
+              requests[choice] = 1;
+            }
+          }
+        }
+        socket.emit('requestRes', requests);
+      } else {
+        socket.emit('requestResFail');
+      }
+    });
+  })
+  socket.on('deliver', function(userID) {
+    homelessPref.once('value', function(snapshot) {
+      var preferences = snapshot.val();
+      for (var preference of preferences) {
+        banks.child(userID).once('value', function(snapshot) {
+          for (var bank of Object.keys(snapshot.val())) {
+            if (preference.shelter in snapshot.val()[bank].shelters) {
+              for (var food of preference.foods) {
+                var newQty = snapshot.val()[bank].food[food].quantity - 1;
+                if (newQty > 0) {
+                  bank.child(userID).child(bank).child('food').child(food).update({quantity: newQty});
+                } else {
+                  bank.child(userID).child(bank).child('food').child(food).remove();
+                }
+              }
+              break;
+            }
+          }
+        });
+      }
+    })
   })
 });
 
