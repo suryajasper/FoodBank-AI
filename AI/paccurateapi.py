@@ -24,4 +24,4 @@ class Paccurate:
 
 		d = requests.post('http://api.paccurate.io/', data = r, headers={'Authorization': 'apike ' + self.key}).json()
 
-		return d['boxes'][0]['box']['items']
+		return {'coords': d['boxes'][0]['box']['items'], 'svgs': d['svgs']}
