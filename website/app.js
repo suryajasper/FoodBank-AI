@@ -102,7 +102,7 @@ function getCoordinates(address) {
   return req;
 }
 
-var serviceAccount = require("/Users/suryajasper2004/Downloads/food-bank-ai-service-account.json");
+var serviceAccount = require("../../secret/foodbankai-service-account.json");
 var calMultiplier = 32;
 
 admin.initializeApp({
